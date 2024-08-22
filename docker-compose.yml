@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DB_HOST=${DJANGO_DB_HOST}
+      - DJANGO_DB_NAME=${DJANGO_DB_NAME}
+      - DJANGO_DB_USER=${DJANGO_DB_USER}
+      - DJANGO_DB_PASSWORD=${DJANGO_DB_PASSWORD}
+    networks:
+      - bookstack_network
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: bookstack_db
+      POSTGRES_USER: bookstack_admin
+      POSTGRES_PASSWORD: B00k$tack123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bookstack_network
+
+volumes:
+  postgres_data:
+
+networks:
+  bookstack_network:
+    driver: bridge
